@@ -1,0 +1,10 @@
+{
+  "name": "Pesadilla en Casa - Version final",
+  "description": "Aplicación web divertida para la gestión familiar de tareas del hogar con ranking de puntos, tienda de recompensas, chat, walkie-talkie y juegos.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
