@@ -1,0 +1,165 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user profile linking them to a family",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "familyId": { "type": "string", "description": "ID of the joined family or null" }
+      },
+      "required": ["uid", "displayName", "email", "photoURL"]
+    },
+    "Family": {
+      "title": "Family",
+      "description": "A family unit managing tasks and rewards",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "code": { "type": "string", "description": "6-character join code" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "wrappedReward": { "type": "string" }
+      },
+      "required": ["id", "name", "code", "createdBy", "createdAt", "wrappedReward"]
+    },
+    "FamilyMember": {
+      "title": "FamilyMember",
+      "description": "A member profile within a specific family with a role, points, and feature blocks",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "child"] },
+        "points": { "type": "number" },
+        "joinedAt": { "type": "number" },
+        "blocked": {
+          "type": "object",
+          "properties": {
+            "walkie": { "type": "boolean" },
+            "games": { "type": "boolean" },
+            "all": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["uid", "displayName", "email", "photoURL", "role", "points", "joinedAt", "blocked"]
+    },
+    "ChoreTask": {
+      "title": "ChoreTask",
+      "description": "A chore task assigned to a family member or all",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "assignedTo": { "type": "string", "description": "Uid of the assigned member or 'all'" },
+        "points": { "type": "number" },
+        "deadline": { "type": "number" },
+        "completed": { "type": "boolean" },
+        "completedAt": { "type": "number" },
+        "completedBy": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "isProposal": { "type": "boolean" }
+      },
+      "required": ["id", "title", "description", "assignedTo", "points", "completed", "createdBy", "createdAt", "isProposal"]
+    },
+    "Reward": {
+      "title": "Reward",
+      "description": "A reward options in the rewards shop",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "pointsCost": { "type": "number" },
+        "createdBy": { "type": "string" },
+        "active": { "type": "boolean" },
+        "proposedBy": { "type": "string" }
+      },
+      "required": ["id", "title", "description", "pointsCost", "createdBy", "active"]
+    },
+    "ShoppingItem": {
+      "title": "ShoppingItem",
+      "description": "An item in the grocery list",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "addedBy": { "type": "string" },
+        "addedAt": { "type": "number" },
+        "bought": { "type": "boolean" },
+        "boughtBy": { "type": "string" }
+      },
+      "required": ["id", "name", "addedBy", "addedAt", "bought"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A chat message in the family group",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "text": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "senderPhoto": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["id", "text", "senderId", "senderName", "senderPhoto", "createdAt"]
+    },
+    "PointsRecord": {
+      "title": "PointsRecord",
+      "description": "A history entry recording a gain or loss of points",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "delta": { "type": "number" },
+        "reason": { "type": "string" },
+        "taskId": { "type": "string" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["id", "uid", "delta", "reason", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Basic user documents mapping to family"
+    },
+    "/families/{familyId}": {
+      "schema": "Family",
+      "description": "Core family units"
+    },
+    "/families/{familyId}/members/{userId}": {
+      "schema": "FamilyMember",
+      "description": "Role and status of user within that family"
+    },
+    "/families/{familyId}/tasks/{taskId}": {
+      "schema": "ChoreTask",
+      "description": "Chores and assignments for the family"
+    },
+    "/families/{familyId}/rewards/{rewardId}": {
+      "schema": "Reward",
+      "description": "Rewards catalog and child proposals"
+    },
+    "/families/{familyId}/shopping/{shoppingId}": {
+      "schema": "ShoppingItem",
+      "description": "Groceries for the family"
+    },
+    "/families/{familyId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Dynamic messages in the family chat"
+    },
+    "/families/{familyId}/pointsHistory/{recordId}": {
+      "schema": "PointsRecord",
+      "description": "Points logs for charts"
+    }
+  }
+}
